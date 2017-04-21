@@ -1,0 +1,53 @@
+import java.io.*;
+import java.util.*;
+public class TollBoothLineSimulator {
+	 public static ArrayList<Vehicle> fileVehicles= new ArrayList<Vehicle>();
+	 public static int arrivalTime;
+	 public static String vehicleType;
+	 public static int delayTime; 
+	 // we should call it delayTime instead of number of wheels because we don't have the number of wheel of manual
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Input File: ");
+		File inputFile =  new File(sc.nextLine());
+		Scanner scan = new Scanner(inputFile);
+		Scanner scan1 = new Scanner(inputFile);
+		System.out.print("Manual Toll Booths: ");
+		int manualTB = sc.nextInt();
+		System.out.print("Automatic Toll Booths: ");
+		int automaticTB = sc.nextInt();
+		
+		TollBoothLine [] lines = new TollBoothLine[6];
+		
+		for(int i=0; i<manualTB; i++){
+			TollBoothLine obj = new TollBoothLine(true);
+			lines[i]= obj;
+		}
+		for(int j=manualTB; j<automaticTB; j++){
+			TollBoothLine obj2 = new TollBoothLine(false);
+			lines[j]= obj2;
+		}
+		
+		while (scan.hasNextLine())
+		{
+			
+			 String vehicleInFile= scan.nextLine();
+			 StringTokenizer stringTokenizer = new StringTokenizer(vehicleInFile, ",");
+			 arrivalTime= Integer.parseInt(stringTokenizer.nextElement().toString());
+			 vehicleType = stringTokenizer.nextElement().toString();
+			 if  (vehicleType.equals("M"))
+			 {
+				 delayTime = Integer.parseInt(stringTokenizer.nextElement().toString());
+			 }
+			 else delayTime = 1;
+			 Vehicle v= new Vehicle (arrivalTime, vehicleType, delayTime);
+			 fileVehicles.insert(v);
+			
+		}
+		
+
+	}
+
+}
