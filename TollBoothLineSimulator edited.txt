@@ -13,7 +13,6 @@ public class TollBoothLineSimulator {
 		System.out.print("Input File: ");
 		File inputFile =  new File(sc.nextLine());
 		Scanner scan = new Scanner(inputFile);
-		Scanner scan1 = new Scanner(inputFile);
 		System.out.print("Manual Toll Booths: ");
 		int manualTB = sc.nextInt();
 		System.out.print("Automatic Toll Booths: ");
