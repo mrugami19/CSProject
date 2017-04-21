@@ -42,7 +42,7 @@ public class TollBoothLineSimulator {
 			 }
 			 else delayTime = 1;
 			 Vehicle v= new Vehicle (arrivalTime, vehicleType, delayTime);
-			 fileVehicles.insert(v);
+			 fileVehicles.add(v);
 			
 		}
 		
