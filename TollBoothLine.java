@@ -8,8 +8,6 @@ public class TollBoothLine
 	private int currentPos[];
 	private boolean isFull[];
 	
-	
-	
 	public TollBoothLine(int numLine)
 	{
 		if((numLine > 0) && ( (numLineAvailable - numLine)>=0 ))
@@ -40,11 +38,10 @@ public class TollBoothLine
 				
 	}
 	
-	
-	public boolean insert(Vehicle insVeh)
+	public int insert(Vehicle insVeh)
 	{
 		boolean vehicleInserted = false;
-		int lowestIndex =0;//Index of the line with the least number of cars
+		int lowestIndex =0;//Index of the line with the least number of cars--first
 		int lowestLine = numItems[0]; //Assume that the first line has the least number of cars
 		
 		for(int i =0; i<numItems.length; i++)//Checks to see which line has the lowest amount of cars
@@ -57,11 +54,11 @@ public class TollBoothLine
 			}
 		}
 		
-		if(numItems[lowestIndex] < MAX_SIZE)// check if line with the least amount of vehicles has less then 25 cars
+		if(!isFull[lowestIndex])// check if line with the least amount of vehicles has less then 25 cars
 		{
 			line[lowestIndex][currentPos[lowestIndex]] = insVeh;//if so, insert it there
 			vehicleInserted = true;
-			Vehicle.setLine(lowestIndex);//saves the line this car was inserted to into an attribute
+			//Vehicle.setLine(lowestIndex);//saves the line this car was inserted to into an attribute
 			numItems[lowestIndex]++; //increase number of cars of that line
 			currentPos[lowestIndex]++; //increase current position of that line	
 			
@@ -69,22 +66,56 @@ public class TollBoothLine
 			{
 				isFull[lowestIndex] = true;
 			}
+			// System.out.println(isFull[lowestIndex]);
+			
 		}
-		System.out.println("Is full: " + isFull[lowestIndex]);
-		
-		return vehicleInserted;
+		if(!vehicleInserted)
+			return -1;
+		else
+			return lowestIndex; // returns the line this variable was saved into	
 	}
 	
-	public boolean remove(Vehicle remVeh)
+	public void moveUp(int whichLine)//Moves the line up one, and deletes the first car
 	{
-		boolean vehicleRemoved = false;
 		
-		return vehicleRemoved;
+		doneVehicle.insert(line[whichLine][0]);
+		for(int i =0; i < currentPos[whichLine]-1;i++)
+		{
+			line[whichLine][i] = line[whichLine][i+1];
+		}
+		currentPos[whichLine]--;
+		numItems[whichLine]--;
+		if( (numItems[whichLine]) < MAX_SIZE)//If the line is 25, then its full
+		{
+			isFull[whichLine] = false;
+		}
+	
 	}
 	
+	public String toString()
+	{
+		String temp = "";
+		for(int i=0; i < line.length; i++)
+		{
+			
+			for(int j =0; j < line[i].length; j++)
+			{
+				temp += line[i][j] + " ";
+			}
+			temp += "\n";
+		}
+		return temp;
+	}
+
+	public Vehicle getNextItem(int whichLine)
+	{
+		return line[whichLine][currentPos[whichLine]];
+	}
 	
-	
-	
+	public Vehicle getLastItem(int whichLine)
+	{
+		return line[whichLine][currentPos[whichLine]-1];
+	}
 }
 	
 
