@@ -82,7 +82,16 @@ public class TollBoothLineSimulator {
 			
 		}
 		
-		
+		for (int k=0; k<manualTB; k++ )
+		{
+			System.out.println("Manual Line " + k + " Maximum Length= " + ManualLines.getMaxLenght(k));
+			
+		}
+		for (int k=0; k<automaticTB; k++ )
+		{
+			System.out.println("Manual Line " + k + " Maximum Length= " + AutomaticLines.getMaxLenght(k));
+			
+		}
 
 	}
 
