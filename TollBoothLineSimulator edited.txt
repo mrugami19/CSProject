@@ -6,8 +6,8 @@ public class TollBoothLineSimulator {
 	 public static String vehicleType;
 	 public static int delayTime; 
 	 public static int timer;
-	 public static TollBoothLine[] ManualLines;
-	 public static TollBoothLine[] AutomaticLines;
+	 public static TollBoothLine ManualLines;
+	 public static TollBoothLine AutomaticLines;
 	 // we should call it delayTime instead of number of wheels because we don't have the number of wheel of manual
 
 	public static void main(String[] args) throws IOException {
@@ -22,8 +22,8 @@ public class TollBoothLineSimulator {
 		System.out.print("Automatic Toll Booths: ");
 		int automaticTB = sc.nextInt();
 		
-		 ManualLines = new TollBoothLine[manualTB];
-		 AutomaticLines = new TollBoothLine[automaticTB];
+		 ManualLines = new TollBoothLine(manualTB);
+		 AutomaticLines = new TollBoothLine(automaticTB);
 		
 		while (scan.hasNextLine())
 		{
@@ -38,50 +38,58 @@ public class TollBoothLineSimulator {
 			 }
 			 else delayTime = 1;
 			 Vehicle v= new Vehicle (arrivalTime, vehicleType, delayTime);
-			 fileVehicles.insert(v);
+			 fileVehicles.add(v);
 			
 		}
 		
 		int timer= 1;
-		int numberOfVehiclesInManualLines=0;
-		int numberOfVehiclesInAutomaticLines=0;
+		int numberOfVehiclesInLines=0;
+		boolean time = false;
+
 				
 		for (int i=0; i<fileVehicles.size(); i++)
 		{
-			Vehicle vehicle = fileVehicles.indexOf(i);
-			if (vehicle.getArrivalTime()==timer && vehicle.getVehicleType().equals("M"))
-			{
-				ManualLines.insert(vehicle);
-				numberOfVehiclesInManualLines++;
-			}
-			else if (vehicle.getArrivalTime()==timer && vehicle.getVehicleType().equals("A"))
-			{
-				AutomaticLines.insert(vehicle);
-				numberOfVehiclesInAutomaticLines++;
-			}
-			else 
-			{
-				int numberOfVehiclesInLines= numberOfVehiclesInManualLines + numberOfVehiclesInAutomaticLines;
-				int lastTimer= timer;
-				timer++;
-				
-				for (int j=0; j<numberOfVehiclesInLines; j++)
+				Vehicle vehicle = fileVehicles.get(i);
+				if (vehicle.getArrivalTime()==timer)
+					{
+						if (vehicle.getVehicleType().equals("M"))
+						{
+							System.out.println(vehicle);
+							ManualLines.insert(vehicle);
+							numberOfVehiclesInLines= numberOfVehiclesInLines+1 ;
+						}
+						else if (vehicle.getVehicleType().equals("A"))
+						{
+							System.out.println(vehicle);
+							AutomaticLines.insert(vehicle);
+							numberOfVehiclesInLines= numberOfVehiclesInLines+1 ;
+						}
+					}
+			
+				else if (vehicle.getArrivalTime()>timer)
 				{
-					Vehicle v2= fileVehicles.indexOf(j);
-					int deleteTime= lastTimer+ v2.getDelayTime();
-					if (timer== deleteTime && v2.getVehicleType().equal("M")) 
+					while(timer!= vehicle.getArrivalTime())
 					{
-						ManualLines.moveUp(ManualLines.isThere(v2));
+						int lastTimer= timer;
+						for (int j=0; j<numberOfVehiclesInLines; j++)
+						{
+							Vehicle v2= fileVehicles.get(j);
+							int deleteTime= lastTimer+ v2.delayTime();
+							if ((timer+1)== deleteTime && v2.getVehicleType().equals("M")) 
+							{
+								ManualLines.moveUp(ManualLines.isThere(v2));
+							}
+							else if (timer== deleteTime && v2.getVehicleType().equals("A")) 
+							{
+								AutomaticLines.moveUp(AutomaticLines.isThere(v2));
+							}
+						}
+						timer++;
 					}
-					else if (timer== deleteTime && v2.getVehicleType().equal("A")) 
-					{
-						AutomaticLines.moveUp(AutomaticLines.isThere(v2));
-					}
-				}
+				
 			}
 			
 		}
-		
 		for (int k=0; k<manualTB; k++ )
 		{
 			System.out.println("Manual Line " + k + " Maximum Length= " + ManualLines.getMaxLenght(k));
@@ -89,9 +97,12 @@ public class TollBoothLineSimulator {
 		}
 		for (int k=0; k<automaticTB; k++ )
 		{
-			System.out.println("Manual Line " + k + " Maximum Length= " + AutomaticLines.getMaxLenght(k));
+			System.out.println("Automatic Line " + k + " Maximum Length= " + AutomaticLines.getMaxLenght(k));
 			
 		}
+
+		
+		
 
 	}
 
