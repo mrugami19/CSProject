@@ -116,6 +116,23 @@ public class TollBoothLine
 	{
 		return line[whichLine][currentPos[whichLine]-1];
 	}
+	
+	public int isThere(Vehicle checkVeh)
+	{
+		for(int i=0; i < line.length; i++)
+		{
+			
+			for(int j =0; j < line[i].length; j++)
+			{
+				if(checkVeh == line[i][j])
+				{
+					return i;
+				}
+			}
+			
+		}
+		return -1;
+	}
 }
 	
 
