@@ -5,6 +5,9 @@ public class TollBoothLineSimulator {
 	 public static int arrivalTime;
 	 public static String vehicleType;
 	 public static int delayTime; 
+	 public static int timer;
+	 public static TollBoothLine[] ManualLines;
+	 public static TollBoothLine[] AutomaticLines;
 	 // we should call it delayTime instead of number of wheels because we don't have the number of wheel of manual
 
 	public static void main(String[] args) throws IOException {
@@ -13,21 +16,14 @@ public class TollBoothLineSimulator {
 		System.out.print("Input File: ");
 		File inputFile =  new File(sc.nextLine());
 		Scanner scan = new Scanner(inputFile);
+		Scanner scan1 = new Scanner(inputFile);
 		System.out.print("Manual Toll Booths: ");
 		int manualTB = sc.nextInt();
 		System.out.print("Automatic Toll Booths: ");
 		int automaticTB = sc.nextInt();
 		
-		TollBoothLine [] lines = new TollBoothLine[6];
-		
-		for(int i=0; i<manualTB; i++){
-			TollBoothLine obj = new TollBoothLine(true);
-			lines[i]= obj;
-		}
-		for(int j=manualTB; j<automaticTB; j++){
-			TollBoothLine obj2 = new TollBoothLine(false);
-			lines[j]= obj2;
-		}
+		 ManualLines = new TollBoothLine[manualTB];
+		 AutomaticLines = new TollBoothLine[automaticTB];
 		
 		while (scan.hasNextLine())
 		{
@@ -42,9 +38,50 @@ public class TollBoothLineSimulator {
 			 }
 			 else delayTime = 1;
 			 Vehicle v= new Vehicle (arrivalTime, vehicleType, delayTime);
-			 fileVehicles.add(v);
+			 fileVehicles.insert(v);
 			
 		}
+		
+		int timer= 1;
+		int numberOfVehiclesInManualLines=0;
+		int numberOfVehiclesInAutomaticLines=0;
+				
+		for (int i=0; i<fileVehicles.size(); i++)
+		{
+			Vehicle vehicle = fileVehicles.indexOf(i);
+			if (vehicle.getArrivalTime()==timer && vehicle.getVehicleType().equals("M"))
+			{
+				ManualLines.insert(vehicle);
+				numberOfVehiclesInManualLines++;
+			}
+			else if (vehicle.getArrivalTime()==timer && vehicle.getVehicleType().equals("A"))
+			{
+				AutomaticLines.insert(vehicle);
+				numberOfVehiclesInAutomaticLines++;
+			}
+			else 
+			{
+				int numberOfVehiclesInLines= numberOfVehiclesInManualLines + numberOfVehiclesInAutomaticLines;
+				int lastTimer= timer;
+				timer++;
+				
+				for (int j=0; j<numberOfVehiclesInLines; j++)
+				{
+					Vehicle v2= fileVehicles.indexOf(j);
+					int deleteTime= lastTimer+ v2.getDelayTime();
+					if (timer== deleteTime && v2.getVehicleType().equal("M")) 
+					{
+						ManualLines.moveUp(ManualLines.isThere(v2));
+					}
+					else if (timer== deleteTime && v2.getVehicleType().equal("A")) 
+					{
+						AutomaticLines.moveUp(AutomaticLines.isThere(v2));
+					}
+				}
+			}
+			
+		}
+		
 		
 
 	}
