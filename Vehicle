@@ -1,0 +1,33 @@
+public class Vehicle {
+	private String type;
+	private int delayTime;
+	private int arrivalTime;
+//	private boolean done;
+	
+	public Vehicle(int passedArrivalTime, String passedType, int passedDelayTime){
+//		manual=type;
+//		if(manual==true){
+			delayTime=passedDelayTime;
+//		}
+//		else{
+//			delayTime=1;
+//		}
+		arrivalTime=passedArrivalTime;
+//		done=false;
+		type = passedType;
+	}
+	public String getVehicleType(){
+			return type;
+	}
+	public int getArrivalTime(){
+		return arrivalTime;
+	}
+	public int delayTime()
+	{
+		return delayTime;
+	}
+	public String toString()
+	{
+		return "type "+ type + " delayTime " + delayTime + " arrivalTime  " + arrivalTime;
+	}
+  }
