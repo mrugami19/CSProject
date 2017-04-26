@@ -16,4 +16,18 @@ public class doneVehicle
 		}
 		else return null;
 	}
+	// is there method added for the main
+	public static boolean isThere(Vehicle vehicle)
+	{
+		boolean there= false;
+		for(int j =0; j < doneVehicles.size(); j++)
+		{
+			if(vehicle == doneVehicles.get(j))
+			{
+				there= true;
+			}
+		}
+		return there;
+
+	}
 }
