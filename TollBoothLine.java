@@ -133,6 +133,29 @@ public class TollBoothLine
 		}
 		return -1;
 	}
+	// get max length and is there added for the main
+	public int getMaxLength(int whichLine)
+	{
+		if (numItems[whichLine]>maximumLength) maximumLength= numItems[whichLine];
+		return maximumLength;
+	}
+	
+	public int isThere(Vehicle checkVeh)
+	{
+		for(int i=0; i < line.length; i++)
+		{
+			
+			for(int j =0; j < line[i].length; j++)
+			{
+				if(checkVeh == line[i][j])
+				{
+					return i;
+				}
+			}
+			
+		}
+		return -1;
+	}
 }
 	
 
