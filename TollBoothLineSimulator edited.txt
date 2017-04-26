@@ -45,6 +45,8 @@ public class TollBoothLineSimulator {
 		int timer= 1;
 		int numberOfVehiclesInLines=0;
 		boolean time = false;
+		Vehicle ManualinsertedVehicle= null;
+		Vehicle AutomaticinsertedVehicle = null;
 
 				
 		for (int i=0; i<fileVehicles.size(); i++)
@@ -54,16 +56,18 @@ public class TollBoothLineSimulator {
 					{
 						if (vehicle.getVehicleType().equals("M"))
 						{
-							System.out.println(vehicle);
+						
 							ManualLines.insert(vehicle);
-							numberOfVehiclesInLines= numberOfVehiclesInLines+1 ;
+							ManualinsertedVehicle = vehicle;
+							System.out.println(ManualinsertedVehicle);
 						}
 						else if (vehicle.getVehicleType().equals("A"))
 						{
-							System.out.println(vehicle);
 							AutomaticLines.insert(vehicle);
-							numberOfVehiclesInLines= numberOfVehiclesInLines+1 ;
+							AutomaticinsertedVehicle = vehicle;
+							System.out.println(AutomaticinsertedVehicle);
 						}
+						numberOfVehiclesInLines++;
 					}
 			
 				else if (vehicle.getArrivalTime()>timer)
@@ -71,18 +75,27 @@ public class TollBoothLineSimulator {
 					while(timer!= vehicle.getArrivalTime())
 					{
 						int lastTimer= timer;
-						for (int j=0; j<numberOfVehiclesInLines; j++)
+						for (int j=0; j<numberOfVehiclesInLines; j++) 
 						{
-							Vehicle v2= fileVehicles.get(j);
-							int deleteTime= lastTimer+ v2.delayTime();
-							if ((timer+1)== deleteTime && v2.getVehicleType().equals("M")) 
-							{
-								ManualLines.moveUp(ManualLines.isThere(v2));
-							}
-							else if (timer== deleteTime && v2.getVehicleType().equals("A")) 
-							{
-								AutomaticLines.moveUp(AutomaticLines.isThere(v2));
-							}
+							if (!doneVehicle.isThere(fileVehicles.get(j)))
+									{
+										int deleteTime= lastTimer+ fileVehicles.get(j).delayTime();
+											if ((timer+1)== deleteTime)
+												{ 
+													if(fileVehicles.get(j).getVehicleType().equals("M")) 
+													{
+														int lineToMoveUp = ManualLines.isThere(fileVehicles.get(j));
+														ManualLines.moveUp(lineToMoveUp);
+														System.out.println("deleted Vehicle " + fileVehicles.get(j));
+													}
+													else if (fileVehicles.get(j).getVehicleType().equals("A")) 
+													{
+														int lineToMoveUp = AutomaticLines.isThere(fileVehicles.get(j));
+														AutomaticLines.moveUp(lineToMoveUp);
+														System.out.println("deleted Vehicle " + fileVehicles.get(j));
+													}
+												}
+									}
 						}
 						timer++;
 					}
@@ -92,12 +105,12 @@ public class TollBoothLineSimulator {
 		}
 		for (int k=0; k<manualTB; k++ )
 		{
-			System.out.println("Manual Line " + k + " Maximum Length= " + ManualLines.getMaxLenght(k));
+			System.out.println("Manual Line " + k + " Maximum Length= " + ManualLines.getMaxLength(k));
 			
 		}
 		for (int k=0; k<automaticTB; k++ )
 		{
-			System.out.println("Automatic Line " + k + " Maximum Length= " + AutomaticLines.getMaxLenght(k));
+			System.out.println("Automatic Line " + k + " Maximum Length= " + AutomaticLines.getMaxLength(k));
 			
 		}
 
