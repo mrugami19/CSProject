@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-public class ToolboothLineSimulatorE
+public class TollBoothLineSimulator
 {
 	 public static int arrivalTime;
 	 public static String vehicleType;
