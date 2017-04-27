@@ -7,6 +7,7 @@ public class TollBoothLine
 	private int numItems[];//how many items are in each line
 	private int currentPos[];
 	private boolean isFull[];
+	private int maximumLength;
 	
 	public TollBoothLine(int numLine)
 	{
