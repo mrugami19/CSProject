@@ -144,6 +144,10 @@ public class TollBoothLine
 	{
 		return line[whichline][whatPosition];
 	}
+	public int getNumItems(int whichLine)
+	{
+		return numItems[whichLine];
+	}
 }
 	
 
