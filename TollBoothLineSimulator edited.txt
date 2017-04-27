@@ -10,7 +10,12 @@ public class TollBoothLineSimulator
 	 public static int timer;
 	 public static TollBoothLine ManualLines;
 	 public static TollBoothLine AutomaticLines;
-	
+	 public static StringTokenizer stringTokenizer;
+	 public static boolean canRead;
+	 public static int maxWait;
+	 public static int numberOfAutomaticVehicle;
+	 public static int numberOfManualVehicle;
+	 
 	 public static void main(String[] args) throws IOException 
 	{
 		 Scanner sc = new Scanner(System.in);
@@ -21,16 +26,26 @@ public class TollBoothLineSimulator
 			int manualTB = sc.nextInt();
 			System.out.print("Automatic Toll Booths: ");
 			int automaticTB = sc.nextInt();
+			maxWait =0;
+			numberOfAutomaticVehicle=0;
+			numberOfManualVehicle=0;
 			
 			 ManualLines = new TollBoothLine(manualTB);
 			 AutomaticLines = new TollBoothLine(automaticTB);
 			 timer =1;
+			 String line= null;
+			 canRead = true;
 			 while (scan.hasNextLine())
 			 {
-				 StringTokenizer stringTokenizer = new StringTokenizer(scan.nextLine(), ",");
+				 if (canRead) 
+				 {
+					 line = scan.nextLine();
+				 }
+				 stringTokenizer = new StringTokenizer(line, ",");
 				 arrivalTime = Integer.parseInt(stringTokenizer.nextToken());
 				 if (timer == arrivalTime)
-				 {
+				 {	
+					 canRead = true;
 					 vehicleType = stringTokenizer.nextElement().toString();
 					 if  (vehicleType.equals("M"))
 					 {
@@ -38,6 +53,7 @@ public class TollBoothLineSimulator
 						 Vehicle v= new Vehicle (arrivalTime, vehicleType, delayTime);
 						 ManualLines.insert(v);
 //						 System.out.println(v);
+						 numberOfManualVehicle++;
 					 }
 					 else if (vehicleType.equals("A"))
 					 {
@@ -45,11 +61,13 @@ public class TollBoothLineSimulator
 						 Vehicle v= new Vehicle (arrivalTime, vehicleType, delayTime);
 						 AutomaticLines.insert(v);
 //						 System.out.println(v);
+						 numberOfAutomaticVehicle++ ;
 					 }
 						
 				 }
 				 else if (timer< arrivalTime)
 				 {
+					 canRead = false;
 					 while(timer!= arrivalTime)
 						{
 						 	for (int i=0; i<manualTB; i++)
@@ -59,8 +77,12 @@ public class TollBoothLineSimulator
 						 			if (ManualLines.getNumItems(i)!= 0)
 						 			{
 						 				Vehicle v= ManualLines.getVehicleInALine(i,j);
-						 				int deleteTime = timer + v.getArrivalTime();
-						 				if (deleteTime == (timer+1)) ManualLines.moveUp(i);	
+						 				int deleteTime = timer + v.delayTime();
+						 				if (deleteTime == (timer+1)) 
+						 					{
+						 						ManualLines.moveUp(i);	
+//						 						System.out.println("deleted Vehicle is " + v);
+						 					}
 						 			}
 						 		}
 						 	}
@@ -71,8 +93,12 @@ public class TollBoothLineSimulator
 						 			if (AutomaticLines.getNumItems(i) != 0)
 						 			{	
 						 				Vehicle v= AutomaticLines.getVehicleInALine(i,j);
-						 				int deleteTime = timer + v.getArrivalTime();
-						 				if (deleteTime == (timer+1)) AutomaticLines.moveUp(i);	
+						 				int deleteTime = timer + v.delayTime();
+						 				if (deleteTime == (timer+1)) 
+						 					{
+						 						AutomaticLines.moveUp(i);	
+//						 					System.out.println("deleted Vehicle is " + v);
+						 					}
 						 			}
 						 		}
 						 	}
@@ -82,17 +108,22 @@ public class TollBoothLineSimulator
 			
 			 }
 			 
-			 for (int k=0; k<manualTB; k++ )
-				{
-					System.out.println("Manual Line " + k + " Maximum Length= " + ManualLines.getMaxLength(k));
+			 for (int k=0; k<manualTB; k++ ) 
+		  	{
+				System.out.println("Manual Line " + (k+1) + " Maximum Length= " + ManualLines.getMaxLength(k));
 					
-				}
-				for (int k=0; k<automaticTB; k++ )
-				{
-					System.out.println("Automatic Line " + k + " Maximum Length= " + AutomaticLines.getMaxLength(k));
+			}
+			for (int k=0; k<automaticTB; k++ )
+			{
+				System.out.println("Automatic Line " + (k+1) + " Maximum Length= " + AutomaticLines.getMaxLength(k));
 					
-				}
-	
+			}
+			for (int k=0; k<automaticTB; k++ )
+			{
+				if (AutomaticLines.getMaxLength(k)>maxWait) maxWait= AutomaticLines.getMaxLength(k);
+			}
+			System.out.println("Max Automatic Wait = " + (maxWait*1));
+			
 	
 	}
 }
