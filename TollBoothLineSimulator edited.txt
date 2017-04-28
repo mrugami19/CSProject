@@ -2,160 +2,210 @@ import java.io.*;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-public class TollBoothLineSimulator
-{
-	 public static int arrivalTime;
-	 public static String vehicleType;
-	 public static int delayTime; 
-	 public static int timer;
-	 public static TollBoothLine ManualLines;
-	 public static TollBoothLine AutomaticLines;
-	 public static StringTokenizer stringTokenizer;
-	 public static boolean canRead;
-	 public static int autoMaxWait;
-	 public static int manualMaxWait;
-	 public static int autoVehicleWait;
-	 public static int manualVehicleWait;
-	 public static double totalAutoWait;
-	 public static double totalManualWait;
-	 public static int numberOfAutomaticVehicle;
-	 public static int numberOfManualVehicle;
-	 
-	 public static void main(String[] args) throws IOException 
-	{
-		 Scanner sc = new Scanner(System.in);
-			System.out.print("Input File: ");
-			File inputFile =  new File(sc.nextLine());
-			Scanner scan = new Scanner(inputFile);
+public class TollBoothLineSimulator {
+	public static int arrivalTime;
+	public static String vehicleType;
+	public static int delayTime;
+	public static int timer;
+	public static TollBoothLine ManualLines;
+	public static TollBoothLine AutomaticLines;
+	public static StringTokenizer stringTokenizer;
+	public static boolean canRead;
+	public static int autoMaxWait;
+	public static int manualMaxWait;
+	public static int autoVehicleWait;
+	public static int manualVehicleWait;
+	public static double totalAutoWait;
+	public static double totalManualWait;
+	public static int numberOfAutomaticVehicle;
+	public static int numberOfManualVehicle;
+	public static int autoMaxLine[];
+	public static int manMaxLine[];
+
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Input File: ");
+		File inputFile = new File(sc.nextLine());
+		Scanner scan = new Scanner(inputFile);
+		System.out.print("Manual Toll Booths: ");
+		int manualTB = sc.nextInt();
+		while(manualTB< 1)
+		{
+			System.out.println("ERROR...ENTER AT LEAST ONE FOR MANUAL");
 			System.out.print("Manual Toll Booths: ");
-			int manualTB = sc.nextInt();
-			System.out.print("Automatic Toll Booths: ");
-			int automaticTB = sc.nextInt();
-			autoMaxWait =0;
-			manualMaxWait=0;
-			totalManualWait =0;
-			totalAutoWait =0;
-			numberOfAutomaticVehicle=0;
-			numberOfManualVehicle=0;
-			
-			
-			 ManualLines = new TollBoothLine(manualTB);
-			 AutomaticLines = new TollBoothLine(automaticTB);
-			 timer =1;
-			 String line= null;
-			 canRead = true;
-			 while (scan.hasNextLine())
-			 {
-				 if (canRead) 
-				 {
-					 line = scan.nextLine();
-				 }
-				 stringTokenizer = new StringTokenizer(line, ",");
-				 arrivalTime = Integer.parseInt(stringTokenizer.nextToken());
-				 if (timer == arrivalTime)
-				 {	
-					 canRead = true;
-					 vehicleType = stringTokenizer.nextElement().toString();
-					 if  (vehicleType.equals("M"))
-					 {
-						 delayTime = Integer.parseInt(stringTokenizer.nextElement().toString());
-						 Vehicle v= new Vehicle (arrivalTime, vehicleType, delayTime);
-						 ManualLines.insert(v);
-//						 System.out.println(v);
-						 numberOfManualVehicle++;
-					 }
-					 else if (vehicleType.equals("A"))
-					 {
-						 delayTime = 1;
-						 Vehicle v= new Vehicle (arrivalTime, vehicleType, delayTime);
-						 AutomaticLines.insert(v);
-//						 System.out.println(v);
-						 numberOfAutomaticVehicle++ ;
-					 }
-						
-				 }
-				 else if (timer< arrivalTime)
-				 {
-					 canRead = false;
-					 while(timer!= arrivalTime)
-						{
-						 	for (int i=0; i<manualTB; i++)
-						 	{
-						 		for (int j=0; j< ManualLines.getNumItems(i); j++)
-						 		{
-						 			if (ManualLines.getNumItems(i)!= 0)
-						 			{
-						 				Vehicle v1= ManualLines.getVehicleInALine(i,j);
-						 				int deleteTime = timer + v1.delayTime();
-						 				if (deleteTime == (timer+1)) 
-						 					{
-						 						manualVehicleWait = deleteTime - v1.getArrivalTime();
-						 						
-						 						if(manualVehicleWait> manualMaxWait)
-						 						{
-						 							manualMaxWait= manualVehicleWait;
-						 						}
-						 						totalManualWait = totalManualWait + manualVehicleWait;				 						
-						 						ManualLines.moveUp(i);
-						 						
-//						 						System.out.println("deleted Vehicle is " + v);
-						 					}
-						 			}
-						 		}
-						 	}
-						 	for (int i=0; i<automaticTB; i++)
-						 	{
-						 		for (int j=0; j< AutomaticLines.getNumItems(i); j++)
-						 		{
-						 			if (AutomaticLines.getNumItems(i) != 0)
-						 			{	
-						 				Vehicle v= AutomaticLines.getVehicleInALine(i,j);
-						 				int deleteTime = timer + v.delayTime();
-						 				if (deleteTime == (timer+1)) 
-						 					{
-						 					autoVehicleWait = deleteTime - v.getArrivalTime();
-					 						if(autoVehicleWait> autoMaxWait)
-					 						{
-					 							autoMaxWait= autoVehicleWait;
-					 						}
-					 						totalAutoWait= totalAutoWait + autoVehicleWait;	
-					 						
-						 					AutomaticLines.moveUp(i);	
-//						 					System.out.println("deleted Vehicle is " + v);
-						 					}
-						 			}
-						 		}
-						 	}
-						 	timer++;						 	
+			manualTB = sc.nextInt();
+		}
+		System.out.print("Automatic Toll Booths: ");
+		int automaticTB = sc.nextInt();
+		while(automaticTB <1)
+		{
+			System.out.println("ERROR...ENTER AT LEAST ONE FOR MANUAL");
+			System.out.print("Manual Toll Booths: ");
+			automaticTB = sc.nextInt();
+		}
+
+		autoMaxWait = 0;
+		manualMaxWait = 0;
+		totalManualWait = 0;
+		totalAutoWait = 0;
+		numberOfAutomaticVehicle = 0;
+		numberOfManualVehicle = 0;
+
+		ManualLines = new TollBoothLine(manualTB);
+		AutomaticLines = new TollBoothLine(automaticTB);
+		manMaxLine = new int [manualTB];
+		for(int i =0; i < manualTB; i++){
+			manMaxLine[i]=0;
+		}
+		autoMaxLine = new int [automaticTB];
+		for(int i =0; i < automaticTB; i++){
+			autoMaxLine[i]=0;
+		}
+		timer = 1;
+		String line = null;
+		canRead = true;
+		while (scan.hasNextLine()) {
+			if (canRead) {
+				line = scan.nextLine();
+			}
+			stringTokenizer = new StringTokenizer(line, ",");
+			arrivalTime = Integer.parseInt(stringTokenizer.nextToken());
+			if (timer == arrivalTime) {
+				canRead = true;
+				vehicleType = stringTokenizer.nextElement().toString();
+				if (vehicleType.equals("M")) {
+					delayTime = Integer.parseInt(stringTokenizer.nextElement().toString());
+					Vehicle v = new Vehicle(arrivalTime, vehicleType, delayTime);
+					ManualLines.insert(v);
+					// System.out.println(v);
+					numberOfManualVehicle++;
+					for (int i=0; i<manualTB; i++){
+						if (ManualLines.getNumItems(i)> manMaxLine[i]){
+							manMaxLine[i] = ManualLines.getNumItems(i);
 						}
-				 }
-			
-			 }
-			 
-			 for (int k=0; k<manualTB; k++ ) 
-		  	{
-				System.out.println("Manual Line " + (k+1) + " Maximum Length= " + ManualLines.getMaxLength(k));
-					
+					}
+				} else if (vehicleType.equals("A")) {
+					delayTime = 1;
+					Vehicle v = new Vehicle(arrivalTime, vehicleType, delayTime);
+					AutomaticLines.insert(v);
+					// System.out.println(v);
+					numberOfAutomaticVehicle++;
+					for (int i=0; i<automaticTB; i++){
+						if (AutomaticLines.getNumItems(i)> autoMaxLine[i]){
+							autoMaxLine[i] = AutomaticLines.getNumItems(i);
+						}
+					}
+				}
+
+			} else if (timer < arrivalTime) {
+				canRead = false;
+				while (timer != arrivalTime) {
+					for (int i = 0; i < manualTB; i++) {
+						for (int j = 0; j < ManualLines.getNumItems(i); j++) {
+							if (ManualLines.getNumItems(i) != 0) {
+								Vehicle v1 = ManualLines.getVehicleInALine(i, j);
+								int deleteTime = v1.getArrivalTime() + v1.delayTime();
+								if (deleteTime == (timer + 1)) {
+									manualVehicleWait = deleteTime - v1.getArrivalTime();
+
+									if (manualVehicleWait > manualMaxWait) {
+										manualMaxWait = manualVehicleWait;
+									}
+									totalManualWait = totalManualWait + manualVehicleWait;
+									ManualLines.moveUp(i);
+
+									// System.out.println("deleted Vehicle is "
+									// + v);
+								}
+							}
+						}
+					}
+					for (int i = 0; i < automaticTB; i++) {
+						for (int j = 0; j < AutomaticLines.getNumItems(i); j++) {
+							if (AutomaticLines.getNumItems(i) != 0) {
+								Vehicle v = AutomaticLines.getVehicleInALine(i, j);
+								int deleteTime = v.getArrivalTime() + v.delayTime();
+								if (deleteTime == (timer + 1)) {
+									autoVehicleWait = deleteTime - v.getArrivalTime();
+									if (autoVehicleWait > autoMaxWait) {
+										autoMaxWait = autoVehicleWait;
+									}
+									totalAutoWait = totalAutoWait + autoVehicleWait;
+
+									AutomaticLines.moveUp(i);
+									// System.out.println("deleted Vehicle is "
+									// + v);
+								}
+							}
+						}
+					}
+					timer++;
+				}
 			}
-			for (int k=0; k<automaticTB; k++ )
-			{
-				System.out.println("Automatic Line " + (k+1) + " Maximum Length= " + AutomaticLines.getMaxLength(k));
-					
+
+		}
+		while (timer < 9000) {
+			for (int i = 0; i < manualTB; i++) {
+				for (int j = 0; j < ManualLines.getNumItems(i); j++) {
+					if (ManualLines.getNumItems(i) != 0) {
+						Vehicle v1 = ManualLines.getVehicleInALine(i, j);
+						int deleteTime = v1.getArrivalTime() + v1.delayTime();
+						if (deleteTime == (timer + 1)) {
+							manualVehicleWait = v1.delayTime();
+
+							if (manualVehicleWait > manualMaxWait) {
+								manualMaxWait = manualVehicleWait;
+							}
+							totalManualWait = totalManualWait + manualVehicleWait;
+							ManualLines.moveUp(i);
+
+							// System.out.println("deleted Vehicle is " + v);
+						}
+					}
+				}
 			}
-			double averageManualWait = totalManualWait/numberOfManualVehicle;
-			double averageAutoWait = totalAutoWait/numberOfAutomaticVehicle;
-			System.out.println(totalManualWait);
-			System.out.println("Max Manual Wait = " + autoMaxWait );
-			System.out.println("Max Automatic Wait = " + autoMaxWait );
-			System.out.println("Avg Manual Wait = " + averageManualWait);
-			System.out.println("Avg Auto Wait = " + averageAutoWait );
-			
-//			for (int k=0; k<automaticTB; k++ )
-//			{
-//				if (AutomaticLines.getMaxLength(k)>maxWait) maxWait= AutomaticLines.getMaxLength(k);
-//			}
-//			System.out.println("Max Automatic Wait = " + (maxWait*1));
-			
-	
+			for (int i = 0; i < automaticTB; i++) {
+				for (int j = 0; j < AutomaticLines.getNumItems(i); j++) {
+					if (AutomaticLines.getNumItems(i) != 0) {
+						Vehicle v = AutomaticLines.getVehicleInALine(i, j);
+						int deleteTime = v.getArrivalTime() + v.delayTime();
+						if (deleteTime == (timer + 1)) {
+							autoVehicleWait = v.delayTime();
+							if (autoVehicleWait > autoMaxWait) {
+								autoMaxWait = autoVehicleWait;
+							}
+							totalAutoWait = totalAutoWait + autoVehicleWait;
+
+							AutomaticLines.moveUp(i);
+							// System.out.println("deleted Vehicle is " + v);
+						}
+					}
+				}
+			}
+			timer++;
+		}
+		for (int k = 0; k < manualTB; k++) {
+			System.out.println("Manual Line " + (k + 1) + " Maximum Length= " + manMaxLine[k]);
+
+		}
+		for (int k = 0; k < automaticTB; k++) {
+			System.out.println("Automatic Line " + (k + 1) + " Maximum Length= " + autoMaxLine[k]);
+
+		}
+		double averageManualWait = totalManualWait / numberOfManualVehicle;
+		double averageAutoWait = totalAutoWait / numberOfAutomaticVehicle;
+		// System.out.println(totalManualWait);
+		System.out.println("Max Manual Wait = " + autoMaxWait);
+		System.out.println("Max Automatic Wait = " + autoMaxWait);
+		System.out.println("Avg Manual Wait = " + averageManualWait);
+		System.out.println("Avg Auto Wait = " + averageAutoWait);
+
+		// for (int k=0; k<automaticTB; k++ )
+		// {
+		// if (AutomaticLines.getMaxLength(k)>maxWait) maxWait=
+		// AutomaticLines.getMaxLength(k);
+		// }
+		// System.out.println("Max Automatic Wait = " + (maxWait*1));
+
 	}
 }
