@@ -12,7 +12,12 @@ public class TollBoothLineSimulator
 	 public static TollBoothLine AutomaticLines;
 	 public static StringTokenizer stringTokenizer;
 	 public static boolean canRead;
-	 public static int maxWait;
+	 public static int autoMaxWait;
+	 public static int manualMaxWait;
+	 public static int autoVehicleWait;
+	 public static int manualVehicleWait;
+	 public static double totalAutoWait;
+	 public static double totalManualWait;
 	 public static int numberOfAutomaticVehicle;
 	 public static int numberOfManualVehicle;
 	 
@@ -26,9 +31,13 @@ public class TollBoothLineSimulator
 			int manualTB = sc.nextInt();
 			System.out.print("Automatic Toll Booths: ");
 			int automaticTB = sc.nextInt();
-			maxWait =0;
+			autoMaxWait =0;
+			manualMaxWait=0;
+			totalManualWait =0;
+			totalAutoWait =0;
 			numberOfAutomaticVehicle=0;
 			numberOfManualVehicle=0;
+			
 			
 			 ManualLines = new TollBoothLine(manualTB);
 			 AutomaticLines = new TollBoothLine(automaticTB);
@@ -76,11 +85,19 @@ public class TollBoothLineSimulator
 						 		{
 						 			if (ManualLines.getNumItems(i)!= 0)
 						 			{
-						 				Vehicle v= ManualLines.getVehicleInALine(i,j);
-						 				int deleteTime = timer + v.delayTime();
+						 				Vehicle v1= ManualLines.getVehicleInALine(i,j);
+						 				int deleteTime = timer + v1.delayTime();
 						 				if (deleteTime == (timer+1)) 
 						 					{
-						 						ManualLines.moveUp(i);	
+						 						manualVehicleWait = deleteTime - v1.getArrivalTime();
+						 						
+						 						if(manualVehicleWait> manualMaxWait)
+						 						{
+						 							manualMaxWait= manualVehicleWait;
+						 						}
+						 						totalManualWait = totalManualWait + manualVehicleWait;				 						
+						 						ManualLines.moveUp(i);
+						 						
 //						 						System.out.println("deleted Vehicle is " + v);
 						 					}
 						 			}
@@ -96,7 +113,14 @@ public class TollBoothLineSimulator
 						 				int deleteTime = timer + v.delayTime();
 						 				if (deleteTime == (timer+1)) 
 						 					{
-						 						AutomaticLines.moveUp(i);	
+						 					autoVehicleWait = deleteTime - v.getArrivalTime();
+					 						if(autoVehicleWait> autoMaxWait)
+					 						{
+					 							autoMaxWait= autoVehicleWait;
+					 						}
+					 						totalAutoWait= totalAutoWait + autoVehicleWait;	
+					 						
+						 					AutomaticLines.moveUp(i);	
 //						 					System.out.println("deleted Vehicle is " + v);
 						 					}
 						 			}
@@ -118,11 +142,19 @@ public class TollBoothLineSimulator
 				System.out.println("Automatic Line " + (k+1) + " Maximum Length= " + AutomaticLines.getMaxLength(k));
 					
 			}
-			for (int k=0; k<automaticTB; k++ )
-			{
-				if (AutomaticLines.getMaxLength(k)>maxWait) maxWait= AutomaticLines.getMaxLength(k);
-			}
-			System.out.println("Max Automatic Wait = " + (maxWait*1));
+			double averageManualWait = totalManualWait/numberOfManualVehicle;
+			double averageAutoWait = totalAutoWait/numberOfAutomaticVehicle;
+			System.out.println(totalManualWait);
+			System.out.println("Max Manual Wait = " + autoMaxWait );
+			System.out.println("Max Automatic Wait = " + autoMaxWait );
+			System.out.println("Avg Manual Wait = " + averageManualWait);
+			System.out.println("Avg Auto Wait = " + averageAutoWait );
+			
+//			for (int k=0; k<automaticTB; k++ )
+//			{
+//				if (AutomaticLines.getMaxLength(k)>maxWait) maxWait= AutomaticLines.getMaxLength(k);
+//			}
+//			System.out.println("Max Automatic Wait = " + (maxWait*1));
 			
 	
 	}
