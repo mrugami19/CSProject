@@ -59,9 +59,11 @@ public class TollBoothLine
 		{
 			line[lowestIndex][currentPos[lowestIndex]] = insVeh;//if so, insert it there
 			vehicleInserted = true;
+		
 			//Vehicle.setLine(lowestIndex);//saves the line this car was inserted to into an attribute
 			numItems[lowestIndex]++; //increase number of cars of that line
 			currentPos[lowestIndex]++; //increase current position of that line	
+			
 			
 			if( (numItems[lowestIndex]) == MAX_SIZE)//If the line is 25, then its full
 			{
@@ -78,8 +80,11 @@ public class TollBoothLine
 	
 	public void moveUp(int whichLine)//Moves the line up one, and deletes the first car
 	{
-		
-		doneVehicle.insert(line[whichLine][0]);
+		if (line[whichLine][0].getVehicleType().equals("M"))
+				{
+					AutomaticDoneVeh.insert(line[whichLine][0]);
+				}
+		else { ManualDoneVeh.insert(line[whichLine][0]);}
 		for(int i =0; i < currentPos[whichLine]-1;i++)
 		{
 			line[whichLine][i] = line[whichLine][i+1];
