@@ -1,0 +1,33 @@
+import java.util.*;
+public class ManualDoneVeh
+{
+	static ArrayList<Vehicle> doneVehicles = new ArrayList<Vehicle>();
+	
+	public static void insert(Vehicle insVeh)
+	{
+		doneVehicles.add(insVeh);
+	}
+	
+	public static Vehicle getItem(int i)
+	{
+		if(i >= 0)
+		{
+			return doneVehicles.get(i);
+		}
+		else return null;
+	}
+	// is there method added for the main
+	public static boolean isThere(Vehicle vehicle)
+	{
+		boolean there= false;
+		for(int j =0; j < doneVehicles.size(); j++)
+		{
+			if(vehicle == doneVehicles.get(j))
+			{
+				there= true;
+			}
+		}
+		return there;
+
+	}
+}
